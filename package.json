@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --base-href=/sparta/ && npx angular-cli-ghpages --dir=dist/sparta/browser"
+    "deploy": "ng build --base-href=/Sparta/ && npx angular-cli-ghpages --dir=dist/sparta/browser"
   },
   "private": true,
   "dependencies": {
