@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, effect, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, computed, effect, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,7 +18,7 @@ Chart.register(...registerables);
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.scss',
 })
-export class ProgressComponent implements OnInit, AfterViewInit {
+export class ProgressComponent implements AfterViewInit {
   private storage = inject(WorkoutStorageService);
   private progressService = inject(ProgressService);
   lang = inject(LanguageService);
@@ -36,35 +36,33 @@ export class ProgressComponent implements OnInit, AfterViewInit {
   viewReady = signal(false);
   private initialized = false;
 
+  // Effects declared as fields — valid injection context
+  private autoSelectEffect = effect(() => {
+    const exercises = this.exercisesUsed();
+    if (!this.initialized && exercises.length > 0) {
+      this.initialized = true;
+      this.selectedExerciseId.set(exercises[0].id);
+      if (this.viewReady()) {
+        this.initProgressChart(exercises[0].id);
+      }
+    }
+  });
+
+  private progressEffect = effect(() => {
+    const id = this.selectedExerciseId();
+    if (this.viewReady() && id) {
+      this.updateProgressChart(id);
+    }
+  });
+
+  private frequencyEffect = effect(() => {
+    if (this.viewReady()) {
+      this.updateFrequencyChart();
+    }
+  });
+
   exName(ex: { name: string; nameFr?: string }): string {
     return this.lang.lang() === 'fr' ? (ex.nameFr || ex.name) : ex.name;
-  }
-
-  ngOnInit(): void {
-    // Auto-select first exercise once data loads from IndexedDB
-    effect(() => {
-      const exercises = this.exercisesUsed();
-      if (!this.initialized && exercises.length > 0) {
-        this.initialized = true;
-        this.selectedExerciseId.set(exercises[0].id);
-        if (this.viewReady()) {
-          this.initProgressChart(exercises[0].id);
-        }
-      }
-    });
-
-    effect(() => {
-      const id = this.selectedExerciseId();
-      if (this.viewReady() && id) {
-        this.updateProgressChart(id);
-      }
-    });
-
-    effect(() => {
-      if (this.viewReady()) {
-        this.updateFrequencyChart();
-      }
-    });
   }
 
   ngAfterViewInit(): void {
