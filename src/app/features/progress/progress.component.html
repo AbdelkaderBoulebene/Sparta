@@ -1,0 +1,37 @@
+<h1 class="page-title">Progression</h1>
+
+<div class="charts-grid">
+  <mat-card class="sparta-card chart-card">
+    <div class="chart-card-header">
+      <h2>Évolution du poids max</h2>
+      <mat-form-field appearance="outline" class="exercise-select">
+        <mat-label>Exercice</mat-label>
+        <mat-select [ngModel]="selectedExerciseId()" (ngModelChange)="onExerciseChange($event)">
+          @for (ex of exercisesUsed(); track ex.id) {
+            <mat-option [value]="ex.id">{{ ex.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (exercisesUsed().length === 0) {
+      <div class="empty-state">
+        <mat-icon>show_chart</mat-icon>
+        <p>Faites quelques séances pour voir votre progression</p>
+      </div>
+    } @else {
+      <div class="chart-wrapper">
+        <canvas #progressChart></canvas>
+      </div>
+    }
+  </mat-card>
+
+  <mat-card class="sparta-card chart-card">
+    <div class="chart-card-header">
+      <h2>Fréquence hebdomadaire</h2>
+    </div>
+    <div class="chart-wrapper">
+      <canvas #frequencyChart></canvas>
+    </div>
+  </mat-card>
+</div>

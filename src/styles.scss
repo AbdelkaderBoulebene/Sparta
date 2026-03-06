@@ -1,0 +1,180 @@
+@use '@angular/material' as mat;
+
+// =============================================
+// SPARTA — Thème Spartiate (pierre, sang, bronze)
+// =============================================
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+      primary: mat.$red-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Rajdhani,
+    density: 0,
+  ));
+}
+
+// Variables CSS globales
+:root {
+  --sparta-bg:         #100D09;
+  --sparta-surface:    #1C1510;
+  --sparta-surface-2:  #251B12;
+  --sparta-border:     #3E2E1E;
+  --sparta-red:        #8B1A1A;
+  --sparta-red-bright: #B52525;
+  --sparta-bronze:     #B87333;
+  --sparta-gold:       #C9A84C;
+  --sparta-text:       #E8D5A3;
+  --sparta-text-dim:   #8A7A62;
+  --sparta-text-muted: #4A3F34;
+  --font-title:        'Cinzel', serif;
+  --font-body:         'Rajdhani', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--sparta-bg);
+  color: var(--sparta-text);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+// =============================================
+// COMPOSANTS GLOBAUX
+// =============================================
+
+.sparta-card {
+  background: var(--sparta-surface) !important;
+  color: var(--sparta-text) !important;
+  border-radius: 2px !important;
+  border: 1px solid var(--sparta-border) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+.page-title {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--sparta-bronze);
+  margin: 0 0 24px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--sparta-border);
+  padding-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sparta-text-dim);
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.muscle-chip {
+  background: rgba(139, 26, 26, 0.2);
+  color: #D45050;
+  border: 1px solid rgba(139, 26, 26, 0.4);
+  border-radius: 2px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--sparta-text-dim);
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    color: var(--sparta-border);
+  }
+
+  p {
+    font-size: 1.1rem;
+    font-family: var(--font-title);
+    letter-spacing: 1px;
+  }
+}
+
+// =============================================
+// OVERRIDES MATERIAL
+// =============================================
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--sparta-border);
+  --mdc-outlined-text-field-hover-outline-color: var(--sparta-bronze);
+  --mdc-outlined-text-field-focus-outline-color: var(--sparta-bronze);
+  --mdc-outlined-text-field-label-text-color: var(--sparta-text-dim);
+  --mdc-outlined-text-field-input-text-color: var(--sparta-text);
+}
+
+.mat-mdc-select-panel {
+  background: var(--sparta-surface-2) !important;
+  border: 1px solid var(--sparta-border) !important;
+  border-radius: 2px !important;
+}
+
+.mat-mdc-option {
+  color: var(--sparta-text) !important;
+  font-family: var(--font-body) !important;
+
+  &:hover { background: rgba(184, 115, 51, 0.1) !important; }
+  &.mdc-list-item--selected { color: var(--sparta-bronze) !important; }
+}
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: var(--sparta-surface-2);
+  --mdc-snackbar-supporting-text-color: var(--sparta-text);
+  border: 1px solid var(--sparta-border);
+  border-radius: 2px !important;
+}
+
+.dark-dialog .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: var(--sparta-surface);
+  border: 1px solid var(--sparta-border);
+  border-radius: 2px !important;
+}
+
+// =============================================
+// RESPONSIVE MOBILE
+// =============================================
+
+@media (max-width: 599px) {
+  .page-title {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+  }
+
+  .empty-state {
+    padding: 32px 16px;
+
+    mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  }
+}
+
+// =============================================
+// SCROLLBAR BRONZE
+// =============================================
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--sparta-bg); }
+::-webkit-scrollbar-thumb { background: var(--sparta-bronze); border-radius: 0; }

@@ -1,0 +1,51 @@
+<h1 class="page-title">Tableau de bord</h1>
+
+<div class="stats-grid">
+  <mat-card class="sparta-card stat-card">
+    <mat-icon class="stat-icon">fitness_center</mat-icon>
+    <div class="stat-value">{{ stats().totalWorkouts }}</div>
+    <div class="stat-label">Séances au total</div>
+  </mat-card>
+
+  <mat-card class="sparta-card stat-card">
+    <mat-icon class="stat-icon">today</mat-icon>
+    <div class="stat-value">{{ stats().workoutsThisMonth }}</div>
+    <div class="stat-label">Ce mois-ci</div>
+  </mat-card>
+
+  <mat-card class="sparta-card stat-card">
+    <mat-icon class="stat-icon">event</mat-icon>
+    <div class="stat-value">
+      @if (stats().lastWorkoutDate) {
+        {{ stats().lastWorkoutDate | date:'d MMM':'':'fr' }}
+      } @else {
+        --
+      }
+    </div>
+    <div class="stat-label">Dernière séance</div>
+  </mat-card>
+</div>
+
+<div class="cta-section">
+  <a mat-flat-button routerLink="/workout/new" class="cta-btn">
+    <mat-icon>add_circle</mat-icon>
+    Nouvelle séance
+  </a>
+  <a mat-stroked-button routerLink="/exercises" class="explore-btn">
+    <mat-icon>search</mat-icon>
+    Explorer les exercices
+  </a>
+</div>
+
+@if (recentWorkouts().length > 0) {
+  <h2 class="section-title">Séances récentes</h2>
+  <div class="recent-list">
+    @for (workout of recentWorkouts(); track workout.id) {
+      <mat-card class="sparta-card recent-card" [routerLink]="['/workout', workout.id]">
+        <div class="recent-date">{{ workout.date | date:'EEE d MMM':'':'fr' }}</div>
+        <div class="recent-label">{{ workout.label }}</div>
+        <div class="recent-exos">{{ workout.exercises.length }} exercice(s)</div>
+      </mat-card>
+    }
+  </div>
+}

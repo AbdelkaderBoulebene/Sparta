@@ -1,0 +1,340 @@
+// Template picker
+.template-picker {
+  margin-bottom: 24px;
+
+  .picker-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sparta-text-dim);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+
+  .picker-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .template-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--sparta-surface);
+    border: 1px solid var(--sparta-border);
+    border-radius: 2px;
+    color: var(--sparta-text-dim);
+    cursor: pointer;
+    font-family: var(--font-title);
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+
+    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+
+    .chip-sub {
+      font-size: 0.7rem;
+      color: var(--sparta-text-muted);
+    }
+
+    &:hover {
+      border-color: var(--sparta-bronze);
+      color: var(--sparta-bronze);
+    }
+
+    &.active {
+      border-color: var(--sparta-bronze);
+      background: rgba(184, 115, 51, 0.12);
+      color: var(--sparta-bronze);
+    }
+
+    &.free.active {
+      border-color: var(--sparta-text-dim);
+      background: transparent;
+      color: var(--sparta-text-dim);
+    }
+  }
+}
+
+.workout-header {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.exercise-block {
+  padding: 0 !important;
+  overflow: hidden;
+  border-left: 3px solid var(--sparta-bronze) !important;
+
+  .exercise-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--sparta-surface-2);
+    border-bottom: 1px solid var(--sparta-border);
+    gap: 12px;
+
+    .exercise-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+
+      .exercise-thumb {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        border-radius: 2px;
+        background: var(--sparta-bg);
+        border: 1px solid var(--sparta-border);
+        flex-shrink: 0;
+      }
+
+      .exercise-title {
+        flex: 1;
+        min-width: 0;
+
+        h3 {
+          margin: 0 0 6px;
+          font-family: var(--font-title);
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: var(--sparta-text);
+          letter-spacing: 0.5px;
+        }
+
+        .target-summary {
+          font-size: 0.78rem;
+          color: var(--sparta-bronze);
+          font-weight: 600;
+        }
+
+        .targets-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+
+          .target-label {
+            font-size: 0.68rem;
+            color: var(--sparta-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+          }
+
+          .target-sep { color: var(--sparta-text-muted); font-size: 0.8rem; }
+
+          .target-input {
+            width: 52px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--sparta-border);
+            border-radius: 2px;
+            color: var(--sparta-bronze);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 700;
+            padding: 3px 6px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.15s;
+
+            &:focus { border-color: var(--sparta-bronze); }
+
+            &.target-weight { width: 64px; }
+          }
+        }
+      }
+    }
+
+    .exercise-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+
+      .overload-badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(46, 160, 67, 0.15);
+        border: 1px solid #2ea043;
+        border-radius: 2px;
+        color: #4caf50;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+
+        mat-icon { font-size: 14px; width: 14px; height: 14px; }
+      }
+    }
+  }
+
+  .sets-container {
+    padding: 14px 16px;
+
+    .sets-header {
+      display: grid;
+      grid-template-columns: 36px 90px 1fr 1fr auto;
+      gap: 8px;
+      color: var(--sparta-text-dim);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .set-row {
+      display: grid;
+      grid-template-columns: 36px 90px 1fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .set-number {
+        color: var(--sparta-bronze);
+        font-family: var(--font-title);
+        font-weight: 700;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .set-target {
+        font-size: 0.75rem;
+        color: var(--sparta-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .set-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--sparta-border);
+        border-radius: 2px;
+        color: var(--sparta-text);
+        font-family: var(--font-body);
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 7px 10px;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+        transition: border-color 0.15s;
+
+        &:focus { border-color: var(--sparta-bronze); }
+        &[readonly] { background: rgba(0,0,0,0.15); cursor: default; }
+        &.hit-max { border-color: #2ea043; color: #4caf50; }
+      }
+    }
+  }
+
+  .add-set-btn {
+    margin: 0 16px 16px;
+    border-color: var(--sparta-border) !important;
+    color: var(--sparta-text-dim) !important;
+    border-radius: 2px !important;
+    font-family: var(--font-body) !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+
+    &:hover {
+      border-color: var(--sparta-bronze) !important;
+      color: var(--sparta-bronze) !important;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .workout-header {
+    mat-form-field { min-width: 0; }
+  }
+
+  .exercise-block {
+    .exercise-header .exercise-info .exercise-thumb {
+      width: 40px;
+      height: 40px;
+    }
+
+    .sets-container {
+      .sets-header {
+        grid-template-columns: 28px 1fr 1fr auto;
+      }
+
+      .set-row {
+        grid-template-columns: 28px 1fr 1fr auto;
+
+        .set-target { display: none; }
+      }
+    }
+
+    .add-set-btn {
+      margin: 0 8px 12px;
+    }
+  }
+
+  .targets-row {
+    gap: 4px !important;
+
+    .target-input {
+      width: 44px !important;
+
+      &.target-weight { width: 52px !important; }
+    }
+  }
+}
+
+.actions-bar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .pick-btn {
+    flex: 1;
+    border: 1px solid var(--sparta-border) !important;
+    color: var(--sparta-text-dim) !important;
+    border-radius: 2px !important;
+    font-family: var(--font-title) !important;
+    letter-spacing: 1px !important;
+
+    &:hover {
+      border-color: var(--sparta-bronze) !important;
+      color: var(--sparta-bronze) !important;
+    }
+  }
+
+  .save-btn {
+    flex: 1;
+    background: var(--sparta-red) !important;
+    color: var(--sparta-text) !important;
+    border-radius: 2px !important;
+    font-family: var(--font-title) !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+
+    &:hover { background: var(--sparta-red-bright) !important; }
+  }
+}

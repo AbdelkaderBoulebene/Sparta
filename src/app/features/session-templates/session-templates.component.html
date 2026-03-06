@@ -1,0 +1,171 @@
+<h1 class="page-title">Programmes d'entraînement</h1>
+
+<!-- Template list -->
+@if (!isCreating()) {
+  <div class="templates-header">
+    <button mat-flat-button color="primary" class="create-btn" (click)="startCreate()">
+      <mat-icon>add</mat-icon> Nouveau programme
+    </button>
+  </div>
+
+  @if (templates().length === 0) {
+    <div class="empty-state">
+      <mat-icon>calendar_view_week</mat-icon>
+      <p>Aucun programme créé</p>
+      <span>Créez votre Séance A, Séance B...</span>
+    </div>
+  } @else {
+    <div class="templates-grid">
+      @for (t of templates(); track t.id) {
+        <mat-card class="sparta-card template-card">
+          <div class="template-header">
+            <div>
+              <h2 class="template-name">{{ t.name }}</h2>
+              <span class="template-freq">{{ daysLabel(t.sessionsPerWeek) }}</span>
+            </div>
+            <div class="template-actions">
+              <button mat-icon-button (click)="startEdit(t)" title="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteTemplate(t.id!)" title="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="exercise-list">
+            @for (ex of t.exercises; track ex.exerciseId) {
+              <div class="exercise-row">
+                @if (ex.exerciseImage) {
+                  <img [src]="ex.exerciseImage" [alt]="ex.exerciseName" class="ex-thumb" />
+                }
+                <div class="ex-info">
+                  <span class="ex-name">{{ exDisplayName(ex) }}</span>
+                  <span class="ex-target">
+                    @if (ex.isTimeBased) {
+                      {{ ex.targetSets }} × {{ ex.minDuration ?? 20 }}-{{ ex.maxDuration ?? 60 }}s
+                    } @else {
+                      {{ ex.targetSets }} × {{ ex.minReps }}-{{ ex.maxReps }} reps
+                    }
+                    @if (ex.targetWeight > 0) { &#64; {{ ex.targetWeight }} kg }
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="template-footer">
+            <button mat-flat-button color="primary" class="start-btn" (click)="startSession(t)">
+              <mat-icon>play_arrow</mat-icon>
+              Démarrer une séance
+            </button>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+}
+
+<!-- Create / Edit form -->
+@if (isCreating()) {
+  <mat-card class="sparta-card form-card">
+    <h2 class="form-title">{{ editingId() !== null ? 'Modifier le programme' : 'Nouveau programme' }}</h2>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-name">
+        <mat-label>Nom du programme</mat-label>
+        <input matInput [ngModel]="formName()" (ngModelChange)="formName.set($event)"
+               placeholder="ex: Séance A, Push Day..." />
+        <mat-icon matPrefix>label</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-freq">
+        <mat-label>Séances par semaine</mat-label>
+        <input matInput type="number" [ngModel]="formSessionsPerWeek()"
+               (ngModelChange)="formSessionsPerWeek.set(+$event)" min="1" max="7" />
+        <mat-icon matPrefix>event_repeat</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="exercises-section">
+      <div class="exercises-section-header">
+        <h3>Exercices ({{ formExercises().length }})</h3>
+        <button mat-stroked-button (click)="openExercisePicker()" class="add-ex-btn">
+          <mat-icon>fitness_center</mat-icon> Ajouter un exercice
+        </button>
+      </div>
+
+      @if (formExercises().length === 0) {
+        <p class="no-exercises">Aucun exercice — cliquez sur "Ajouter un exercice"</p>
+      }
+
+      @for (ex of formExercises(); track ex.exerciseId; let i = $index) {
+        <div class="form-exercise">
+          @if (ex.exerciseImage) {
+            <img [src]="ex.exerciseImage" [alt]="ex.exerciseName" class="form-ex-thumb" />
+          }
+          <div class="form-ex-body">
+            <span class="form-ex-name">{{ exDisplayName(ex) }}</span>
+            <div class="form-ex-targets">
+              <label class="target-label">Séries</label>
+              <input type="number" class="target-input"
+                [value]="ex.targetSets"
+                (change)="updateFormExercise(i, 'targetSets', +$any($event.target).value)"
+                min="1" max="20" />
+
+              @if (ex.isTimeBased) {
+                <label class="target-label">Min (s)</label>
+                <input type="number" class="target-input"
+                  [value]="ex.minDuration ?? 20"
+                  (change)="updateFormExercise(i, 'minDuration', +$any($event.target).value)"
+                  min="1" max="3600" />
+
+                <label class="target-label">Max (s)</label>
+                <input type="number" class="target-input"
+                  [value]="ex.maxDuration ?? 60"
+                  (change)="updateFormExercise(i, 'maxDuration', +$any($event.target).value)"
+                  min="1" max="3600" />
+              } @else {
+                <label class="target-label">Reps min</label>
+                <input type="number" class="target-input"
+                  [value]="ex.minReps"
+                  (change)="updateFormExercise(i, 'minReps', +$any($event.target).value)"
+                  min="1" max="100" />
+
+                <label class="target-label">Reps max</label>
+                <input type="number" class="target-input"
+                  [value]="ex.maxReps"
+                  (change)="updateFormExercise(i, 'maxReps', +$any($event.target).value)"
+                  min="1" max="100" />
+              }
+
+              <label class="target-label">Poids (kg)</label>
+              <input type="number" class="target-input"
+                [value]="ex.targetWeight"
+                (change)="updateFormExercise(i, 'targetWeight', +$any($event.target).value)"
+                min="0" step="2.5" />
+            </div>
+          </div>
+          <button mat-icon-button (click)="toggleFormExerciseTimeBased(i)"
+            [title]="ex.isTimeBased ? 'Mode reps' : 'Mode durée'" class="timer-toggle-btn">
+            <mat-icon>{{ ex.isTimeBased ? 'timer_off' : 'timer' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="removeFormExercise(i)" class="remove-ex-btn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button mat-stroked-button (click)="cancelForm()" class="cancel-btn">
+        <mat-icon>close</mat-icon> Annuler
+      </button>
+      <button mat-flat-button color="primary" (click)="saveTemplate()" class="save-btn">
+        <mat-icon>save</mat-icon> Enregistrer
+      </button>
+    </div>
+  </mat-card>
+}

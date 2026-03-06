@@ -1,0 +1,42 @@
+<h1 class="page-title">Bibliothèque d'exercices</h1>
+
+<div class="filters-bar">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Rechercher un exercice</mat-label>
+    <input matInput [ngModel]="searchTerm()" (ngModelChange)="onSearch($event)" placeholder="ex: squat, bench press..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="category-field">
+    <mat-label>Groupe musculaire</mat-label>
+    <mat-select [ngModel]="selectedBodyPart()" (ngModelChange)="onBodyPartChange($event)">
+      <mat-option value="">Tous</mat-option>
+      @for (part of bodyParts(); track part) {
+        <mat-option [value]="part">{{ langService.translateBodyPart(part) }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-icon-button (click)="refreshCache()" matTooltip="Rafraîchir les données">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <mat-spinner diameter="48" color="accent"></mat-spinner>
+    <p>Chargement des exercices depuis ExerciseDB...</p>
+  </div>
+} @else if (filtered().length === 0) {
+  <div class="empty-state">
+    <mat-icon>search_off</mat-icon>
+    <p>Aucun exercice trouvé</p>
+  </div>
+} @else {
+  <p class="results-count">{{ filtered().length }} exercice(s) trouvé(s)</p>
+  <div class="exercises-grid">
+    @for (exercise of filtered(); track exercise.exerciseId) {
+      <app-exercise-card [exercise]="exercise" />
+    }
+  </div>
+}

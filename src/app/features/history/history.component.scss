@@ -1,0 +1,76 @@
+.workouts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workout-card {
+  cursor: pointer;
+  padding: 18px !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  border-left: 4px solid var(--sparta-border) !important;
+
+  &:hover {
+    transform: translateX(4px);
+    border-left-color: var(--sparta-red) !important;
+    box-shadow: -4px 0 20px rgba(139, 26, 26, 0.25) !important;
+  }
+
+  .workout-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .workout-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--sparta-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+
+      mat-icon { font-size: 13px; width: 13px; height: 13px; }
+    }
+  }
+
+  .workout-label {
+    margin: 0 0 12px;
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sparta-text);
+    letter-spacing: 0.5px;
+  }
+
+  .workout-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      color: var(--sparta-text-dim);
+      font-weight: 600;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        color: var(--sparta-bronze);
+      }
+    }
+  }
+
+  .exercise-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}

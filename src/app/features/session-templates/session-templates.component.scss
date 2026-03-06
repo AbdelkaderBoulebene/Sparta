@@ -1,0 +1,332 @@
+.templates-header {
+  margin-bottom: 24px;
+
+  .create-btn {
+    background: var(--sparta-red) !important;
+    color: var(--sparta-text) !important;
+    border-radius: 2px !important;
+    font-family: var(--font-title) !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+
+    &:hover { background: var(--sparta-red-bright) !important; }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--sparta-text-dim);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: var(--sparta-bronze);
+    opacity: 0.5;
+    display: block;
+    margin: 0 auto 16px;
+  }
+
+  p {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    margin: 0 0 8px;
+  }
+
+  span {
+    font-size: 0.85rem;
+    color: var(--sparta-text-muted);
+  }
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  gap: 20px;
+}
+
+.template-card {
+  padding: 0 !important;
+  overflow: hidden;
+  border-left: 3px solid var(--sparta-bronze) !important;
+
+  .template-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--sparta-surface-2);
+
+    .template-name {
+      margin: 0 0 4px;
+      font-family: var(--font-title);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--sparta-gold);
+      text-transform: uppercase;
+    }
+
+    .template-freq {
+      font-size: 0.78rem;
+      color: var(--sparta-bronze);
+      letter-spacing: 0.5px;
+    }
+
+    .template-actions {
+      display: flex;
+      gap: 4px;
+
+      button { color: var(--sparta-text-dim); }
+    }
+  }
+
+  .exercise-list {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exercise-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .ex-thumb {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 2px;
+      background: var(--sparta-bg);
+      border: 1px solid var(--sparta-border);
+      flex-shrink: 0;
+    }
+
+    .ex-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .ex-name {
+        font-size: 0.88rem;
+        font-family: var(--font-title);
+        color: var(--sparta-text);
+        letter-spacing: 0.3px;
+      }
+
+      .ex-target {
+        font-size: 0.76rem;
+        color: var(--sparta-bronze);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .template-footer {
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--sparta-border);
+
+    .start-btn {
+      width: 100%;
+      background: var(--sparta-red) !important;
+      color: var(--sparta-text) !important;
+      border-radius: 2px !important;
+      font-family: var(--font-title) !important;
+      letter-spacing: 1.5px !important;
+      text-transform: uppercase !important;
+
+      &:hover { background: var(--sparta-red-bright) !important; }
+    }
+  }
+}
+
+// Form card
+.form-card {
+  padding: 24px !important;
+  border-left: 3px solid var(--sparta-gold) !important;
+
+  .form-title {
+    margin: 0 0 20px;
+    font-family: var(--font-title);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sparta-gold);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+
+    .form-name { flex: 2; min-width: 200px; }
+    .form-freq { flex: 1; min-width: 140px; }
+  }
+
+  .exercises-section {
+    margin: 8px 0 24px;
+
+    .exercises-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      h3 {
+        margin: 0;
+        font-family: var(--font-title);
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--sparta-text-dim);
+      }
+
+      .add-ex-btn {
+        border-color: var(--sparta-border) !important;
+        color: var(--sparta-text-dim) !important;
+        border-radius: 2px !important;
+        font-family: var(--font-body) !important;
+        letter-spacing: 0.5px !important;
+        font-size: 0.82rem !important;
+
+        &:hover {
+          border-color: var(--sparta-bronze) !important;
+          color: var(--sparta-bronze) !important;
+        }
+      }
+    }
+
+    .no-exercises {
+      color: var(--sparta-text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 16px;
+    }
+  }
+
+  .form-exercise {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: var(--sparta-surface-2);
+    border: 1px solid var(--sparta-border);
+    border-radius: 2px;
+
+    .form-ex-thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      background: var(--sparta-bg);
+      border: 1px solid var(--sparta-border);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .form-ex-body {
+      flex: 1;
+
+      .form-ex-name {
+        display: block;
+        font-family: var(--font-title);
+        font-size: 0.88rem;
+        color: var(--sparta-text);
+        letter-spacing: 0.3px;
+        margin-bottom: 10px;
+      }
+
+      .form-ex-targets {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .target-label {
+          font-size: 0.7rem;
+          color: var(--sparta-text-dim);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+        }
+
+        .target-input {
+          width: 60px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid var(--sparta-border);
+          border-radius: 2px;
+          color: var(--sparta-text);
+          font-family: var(--font-body);
+          font-size: 0.9rem;
+          font-weight: 600;
+          padding: 5px 8px;
+          text-align: center;
+          outline: none;
+          transition: border-color 0.15s;
+
+          &:focus { border-color: var(--sparta-bronze); }
+        }
+      }
+    }
+
+    .remove-ex-btn { color: var(--sparta-text-muted); flex-shrink: 0; }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+
+    .cancel-btn {
+      border-color: var(--sparta-border) !important;
+      color: var(--sparta-text-dim) !important;
+      border-radius: 2px !important;
+      font-family: var(--font-title) !important;
+      letter-spacing: 1px !important;
+    }
+
+    .save-btn {
+      background: var(--sparta-red) !important;
+      color: var(--sparta-text) !important;
+      border-radius: 2px !important;
+      font-family: var(--font-title) !important;
+      letter-spacing: 1px !important;
+      text-transform: uppercase !important;
+
+      &:hover { background: var(--sparta-red-bright) !important; }
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .form-card {
+    padding: 16px !important;
+
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+
+      .form-name, .form-freq { min-width: 0; flex: unset; width: 100%; }
+    }
+
+    .form-actions {
+      flex-direction: column;
+
+      button { width: 100%; }
+    }
+  }
+
+  .form-exercise {
+    flex-wrap: wrap;
+
+    .form-ex-body .form-ex-targets {
+      gap: 4px;
+
+      .target-input { width: 48px; }
+    }
+  }
+}

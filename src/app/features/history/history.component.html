@@ -1,0 +1,55 @@
+<h1 class="page-title">Historique des séances</h1>
+
+@if (workouts().length === 0) {
+  <div class="empty-state">
+    <mat-icon>history</mat-icon>
+    <p>Aucune séance enregistrée</p>
+    <button mat-flat-button routerLink="/workout/new" color="accent">
+      <mat-icon>add</mat-icon> Commencer une séance
+    </button>
+  </div>
+} @else {
+  <div class="workouts-list">
+    @for (workout of workouts(); track workout.id) {
+      <mat-card class="sparta-card workout-card" (click)="viewWorkout(workout.id!)">
+        <div class="workout-meta">
+          <div class="workout-date">
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ workout.date | date:'EEEE d MMMM y':'':'fr' }}</span>
+          </div>
+          <div class="workout-actions">
+            <button mat-icon-button color="warn" (click)="deleteWorkout($event, workout.id!)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <h3 class="workout-label">{{ workout.label }}</h3>
+
+        <div class="workout-stats">
+          <span class="stat">
+            <mat-icon>fitness_center</mat-icon>
+            {{ workout.exercises.length }} exercice(s)
+          </span>
+          <span class="stat">
+            <mat-icon>repeat</mat-icon>
+            {{ countSets(workout) }} séries
+          </span>
+          <span class="stat">
+            <mat-icon>monitor_weight</mat-icon>
+            {{ totalVolume(workout) | number:'1.0-0' }} kg total
+          </span>
+        </div>
+
+        <div class="exercise-chips">
+          @for (ex of workout.exercises.slice(0, 4); track ex.exerciseId) {
+            <span class="muscle-chip">{{ ex.exerciseName }}</span>
+          }
+          @if (workout.exercises.length > 4) {
+            <span class="muscle-chip">+{{ workout.exercises.length - 4 }}</span>
+          }
+        </div>
+      </mat-card>
+    }
+  </div>
+}

@@ -1,0 +1,28 @@
+<mat-card class="exercise-card sparta-card">
+  <div class="card-image">
+    @if (mainImage) {
+      <img [src]="mainImage" [alt]="exercise.name" loading="lazy" />
+    } @else {
+      <div class="no-image">
+        <mat-icon>fitness_center</mat-icon>
+      </div>
+    }
+    <span class="category-badge">{{ bodyPartLabel }}</span>
+  </div>
+
+  <mat-card-content>
+    <h3 class="exercise-name">{{ displayName }}</h3>
+    <p class="muscles-label">
+      <mat-icon class="muscles-icon">accessibility_new</mat-icon>
+      {{ muscles }}
+    </p>
+  </mat-card-content>
+
+  @if (selectable) {
+    <mat-card-actions>
+      <button mat-flat-button color="accent" (click)="selected.emit(exercise)">
+        <mat-icon>add</mat-icon> Ajouter
+      </button>
+    </mat-card-actions>
+  }
+</mat-card>

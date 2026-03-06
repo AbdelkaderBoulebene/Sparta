@@ -1,0 +1,58 @@
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 599px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chart-card .chart-card-header .exercise-select {
+    width: 100%;
+  }
+}
+
+.chart-card {
+  padding: 20px !important;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--sparta-bronze), var(--sparta-red));
+  }
+
+  .chart-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      font-family: var(--font-title);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--sparta-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .exercise-select {
+      width: 200px;
+    }
+  }
+
+  .chart-wrapper {
+    height: 280px;
+    position: relative;
+  }
+}

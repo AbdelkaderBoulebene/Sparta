@@ -1,0 +1,205 @@
+<h1 class="page-title">{{ isViewMode ? 'Détail de la séance' : 'Nouvelle séance' }}</h1>
+
+<!-- Template picker -->
+@if (!isViewMode && templates.length > 0) {
+  <div class="template-picker">
+    <p class="picker-label">Choisir un programme</p>
+    <div class="picker-list">
+      @for (t of templates; track t.id) {
+        <button class="template-chip" [class.active]="selectedTemplateId() === t.id" (click)="loadTemplate(t)">
+          <mat-icon>calendar_view_week</mat-icon>
+          <span>{{ t.name }}</span>
+          <span class="chip-sub">{{ t.exercises.length }} exo</span>
+        </button>
+      }
+      <button class="template-chip free" [class.active]="selectedTemplateId() === null" (click)="startFreeSession()">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Séance libre</span>
+      </button>
+    </div>
+  </div>
+}
+
+<!-- Header -->
+<div class="workout-header">
+  <mat-form-field appearance="outline">
+    <mat-label>Nom de la séance</mat-label>
+    <input matInput [ngModel]="label()" (ngModelChange)="label.set($event)"
+           [readonly]="isViewMode" placeholder="ex: Séance A, Push Day..." />
+    <mat-icon matPrefix>label</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date</mat-label>
+    <input matInput type="date" [ngModel]="date()" (ngModelChange)="date.set($event)"
+           [readonly]="isViewMode" />
+    <mat-icon matPrefix>calendar_today</mat-icon>
+  </mat-form-field>
+</div>
+
+<!-- Exercises -->
+<div class="exercises-list">
+  @for (ex of exercises(); track ex.exerciseId; let i = $index) {
+    <mat-card class="sparta-card exercise-block">
+
+      <div class="exercise-header">
+        <div class="exercise-info">
+          @if (ex.exerciseImage) {
+            <img [src]="ex.exerciseImage" [alt]="ex.exerciseName" class="exercise-thumb" />
+          }
+          <div class="exercise-title">
+            <h3>{{ exDisplayName(ex) }}</h3>
+            @if (isViewMode) {
+              <span class="target-summary">
+                @if (ex.isTimeBased) {
+                  {{ ex.targetSets }} × {{ ex.minDuration ?? 20 }}-{{ ex.maxDuration ?? 60 }}s &#64; {{ ex.targetWeight }} kg
+                } @else {
+                  {{ ex.targetSets }} × {{ ex.minReps }}-{{ ex.maxReps }} reps &#64; {{ ex.targetWeight }} kg
+                }
+              </span>
+            } @else {
+              <div class="targets-row">
+                <span class="target-label">Séries</span>
+                <input type="number" class="target-input"
+                  [value]="ex.targetSets"
+                  (change)="updateExerciseTarget(i, 'targetSets', +$any($event.target).value)"
+                  min="1" max="20" />
+                @if (ex.isTimeBased) {
+                  <span class="target-label">Min (s)</span>
+                  <input type="number" class="target-input"
+                    [value]="ex.minDuration ?? 20"
+                    (change)="updateExerciseTarget(i, 'minDuration', +$any($event.target).value)"
+                    min="1" max="3600" />
+                  <span class="target-sep">—</span>
+                  <span class="target-label">Max (s)</span>
+                  <input type="number" class="target-input"
+                    [value]="ex.maxDuration ?? 60"
+                    (change)="updateExerciseTarget(i, 'maxDuration', +$any($event.target).value)"
+                    min="1" max="3600" />
+                } @else {
+                  <span class="target-label">Min</span>
+                  <input type="number" class="target-input"
+                    [value]="ex.minReps"
+                    (change)="updateExerciseTarget(i, 'minReps', +$any($event.target).value)"
+                    min="1" max="100" />
+                  <span class="target-sep">—</span>
+                  <span class="target-label">Max reps</span>
+                  <input type="number" class="target-input"
+                    [value]="ex.maxReps"
+                    (change)="updateExerciseTarget(i, 'maxReps', +$any($event.target).value)"
+                    min="1" max="100" />
+                }
+                <span class="target-label">Poids (kg)</span>
+                <input type="number" class="target-input target-weight"
+                  [value]="ex.targetWeight"
+                  (change)="updateExerciseTarget(i, 'targetWeight', +$any($event.target).value)"
+                  min="0" step="2.5" />
+                <button mat-icon-button class="timer-toggle-btn" (click)="toggleTimeBased(i)"
+                  [title]="ex.isTimeBased ? 'Mode reps' : 'Mode durée'">
+                  <mat-icon>{{ ex.isTimeBased ? 'timer_off' : 'timer' }}</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="exercise-actions">
+          @if (isReadyToProgress(ex)) {
+            <span class="overload-badge">
+              <mat-icon>trending_up</mat-icon> Augmenter !
+            </span>
+          }
+          @if (!isViewMode) {
+            <button mat-icon-button color="warn" (click)="removeExercise(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
+          @if (isViewMode && ex.isTimeBased) {
+            <mat-icon class="timer-badge">timer</mat-icon>
+          }
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="sets-container">
+        <div class="sets-header">
+          <span>Série</span>
+          <span>Objectif</span>
+          <span>{{ ex.isTimeBased ? 'Durée (s)' : 'Reps' }}</span>
+          <span>Poids (kg)</span>
+          @if (!isViewMode) { <span></span> }
+        </div>
+
+        @for (set of ex.sets; track $index; let si = $index) {
+          <div class="set-row">
+            <span class="set-number">{{ si + 1 }}</span>
+            <span class="set-target">
+              @if (ex.isTimeBased) {
+                {{ ex.minDuration ?? 20 }}-{{ ex.maxDuration ?? 60 }}s &#64; {{ ex.targetWeight }}kg
+              } @else {
+                {{ ex.minReps }}-{{ ex.maxReps }} &#64; {{ ex.targetWeight }}kg
+              }
+            </span>
+            @if (ex.isTimeBased) {
+              <input type="number"
+                [value]="set.duration ?? (ex.minDuration ?? 20)"
+                (change)="updateSet(i, si, 'duration', +$any($event.target).value)"
+                [readonly]="isViewMode"
+                [class.hit-max]="(set.duration ?? 0) >= (ex.maxDuration ?? 0)"
+                min="1" max="9999"
+                class="set-input"
+              />
+            } @else {
+              <input type="number"
+                [value]="set.reps"
+                (change)="updateSet(i, si, 'reps', +$any($event.target).value)"
+                [readonly]="isViewMode"
+                [class.hit-max]="set.reps >= ex.maxReps"
+                min="1" max="999"
+                class="set-input"
+              />
+            }
+            <input type="number"
+              [value]="set.weight"
+              (change)="updateSet(i, si, 'weight', +$any($event.target).value)"
+              [readonly]="isViewMode"
+              min="0" step="0.5"
+              class="set-input"
+            />
+            @if (!isViewMode) {
+              <button mat-icon-button (click)="removeSet(i, si)" [disabled]="ex.sets.length === 1">
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      @if (!isViewMode) {
+        <button mat-stroked-button class="add-set-btn" (click)="addSet(i)">
+          <mat-icon>add</mat-icon> Ajouter une série
+        </button>
+      }
+    </mat-card>
+  }
+</div>
+
+@if (!isViewMode) {
+  <div class="actions-bar">
+    <button mat-stroked-button (click)="openExercisePicker()" class="pick-btn">
+      <mat-icon>fitness_center</mat-icon>
+      Ajouter un exercice
+    </button>
+    <button mat-flat-button color="primary" (click)="validate()" [disabled]="exercises().length === 0" class="save-btn">
+      <mat-icon>check_circle</mat-icon>
+      Valider la séance
+    </button>
+  </div>
+}
+
+@if (exercises().length === 0 && !isViewMode) {
+  <div class="empty-state">
+    <mat-icon>add_circle_outline</mat-icon>
+    <p>Sélectionnez un programme ou ajoutez des exercices</p>
+  </div>
+}
