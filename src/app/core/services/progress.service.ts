@@ -64,15 +64,15 @@ export class ProgressService {
     return `S${String(week).padStart(2, '0')}`;
   }
 
-  getExercisesUsed(workouts: Workout[]): { id: string; name: string }[] {
-    const map = new Map<string, string>();
+  getExercisesUsed(workouts: Workout[]): { id: string; name: string; nameFr?: string }[] {
+    const map = new Map<string, { name: string; nameFr?: string }>();
     for (const w of workouts) {
       for (const ex of w.exercises) {
         if (!map.has(ex.exerciseId)) {
-          map.set(ex.exerciseId, ex.exerciseName);
+          map.set(ex.exerciseId, { name: ex.exerciseName, nameFr: ex.exerciseNameFr });
         }
       }
     }
-    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+    return Array.from(map.entries()).map(([id, v]) => ({ id, name: v.name, nameFr: v.nameFr }));
   }
 }

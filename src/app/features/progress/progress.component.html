@@ -8,7 +8,7 @@
         <mat-label>Exercice</mat-label>
         <mat-select [ngModel]="selectedExerciseId()" (ngModelChange)="onExerciseChange($event)">
           @for (ex of exercisesUsed(); track ex.id) {
-            <mat-option [value]="ex.id">{{ ex.name }}</mat-option>
+            <mat-option [value]="ex.id">{{ exName(ex) }}</mat-option>
           }
         </mat-select>
       </mat-form-field>

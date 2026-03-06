@@ -74,3 +74,17 @@
     gap: 6px;
   }
 }
+
+@media (max-width: 599px) {
+  .workout-card {
+    padding: 12px !important;
+
+    .workout-stats {
+      gap: 10px;
+
+      .stat { font-size: 0.75rem; }
+    }
+
+    .workout-label { font-size: 0.95rem; margin-bottom: 8px; }
+  }
+}

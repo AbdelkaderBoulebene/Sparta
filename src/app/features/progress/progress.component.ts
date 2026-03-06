@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Chart, registerables } from 'chart.js';
 import { WorkoutStorageService } from '../../core/services/workout-storage.service';
 import { ProgressService } from '../../core/services/progress.service';
+import { LanguageService } from '../../core/services/language.service';
 
 Chart.register(...registerables);
 
@@ -20,6 +21,7 @@ Chart.register(...registerables);
 export class ProgressComponent implements OnInit, AfterViewInit {
   private storage = inject(WorkoutStorageService);
   private progressService = inject(ProgressService);
+  lang = inject(LanguageService);
 
   @ViewChild('progressChart') progressChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('frequencyChart') frequencyChartRef!: ElementRef<HTMLCanvasElement>;
@@ -32,8 +34,25 @@ export class ProgressComponent implements OnInit, AfterViewInit {
 
   selectedExerciseId = signal('');
   viewReady = signal(false);
+  private initialized = false;
+
+  exName(ex: { name: string; nameFr?: string }): string {
+    return this.lang.lang() === 'fr' ? (ex.nameFr || ex.name) : ex.name;
+  }
 
   ngOnInit(): void {
+    // Auto-select first exercise once data loads from IndexedDB
+    effect(() => {
+      const exercises = this.exercisesUsed();
+      if (!this.initialized && exercises.length > 0) {
+        this.initialized = true;
+        this.selectedExerciseId.set(exercises[0].id);
+        if (this.viewReady()) {
+          this.initProgressChart(exercises[0].id);
+        }
+      }
+    });
+
     effect(() => {
       const id = this.selectedExerciseId();
       if (this.viewReady() && id) {
@@ -53,7 +72,8 @@ export class ProgressComponent implements OnInit, AfterViewInit {
     this.initFrequencyChart();
 
     const exercises = this.exercisesUsed();
-    if (exercises.length > 0) {
+    if (exercises.length > 0 && !this.initialized) {
+      this.initialized = true;
       this.selectedExerciseId.set(exercises[0].id);
       this.initProgressChart(exercises[0].id);
     }
