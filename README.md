@@ -4,16 +4,23 @@ Application web de suivi sportif construite avec Angular 19 et Angular Material.
 
 ## Screenshots
 
-> Mets tes captures dans `docs/screenshots/` puis elles apparaîtront ici.
+### Tableau de bord
+![Tableau de bord](docs/screenshots/tableauDeBord.png)
 
-<!-- Décommente les lignes ci-dessous une fois tes screenshots ajoutés :
-![Dashboard](docs/screenshots/dashboard.png)
-![Logger](docs/screenshots/logger.png)
-![Programmes](docs/screenshots/templates.png)
-![Bibliothèque](docs/screenshots/library.png)
-![Progression](docs/screenshots/progress.png)
-![Mobile](docs/screenshots/mobile.png)
--->
+### Nouvelle séance
+![Nouvelle séance](docs/screenshots/nouvelleSeance.png)
+
+### Programmes
+![Programmes](docs/screenshots/programme.png)
+
+### Bibliothèque d'exercices
+![Bibliothèque](docs/screenshots/bibliotheque.png)
+
+### Historique
+![Historique](docs/screenshots/historique.png)
+
+### Progression
+![Progression](docs/screenshots/progression.png)
 
 ## Fonctionnalités
 

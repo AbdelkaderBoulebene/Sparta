@@ -46,10 +46,11 @@ export class ProgressComponent implements AfterViewInit {
   });
 
   // (Re)draw progress chart whenever selected exercise or view readiness changes
+  // setTimeout(0) defers until after Angular renders the @if canvas into the DOM
   private progressEffect = effect(() => {
     const id = this.selectedExerciseId();
     if (this.viewReady() && id) {
-      this.initProgressChart(id);
+      setTimeout(() => this.initProgressChart(id), 0);
     }
   });
 
@@ -73,6 +74,8 @@ export class ProgressComponent implements AfterViewInit {
   }
 
   private initProgressChart(exerciseId: string): void {
+    if (!this.progressChartRef) return; // canvas not yet in DOM
+
     const points = this.progressService.getExerciseProgress(this.workouts(), exerciseId);
 
     if (this.progressChart) this.progressChart.destroy();
