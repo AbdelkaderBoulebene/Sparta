@@ -36,22 +36,20 @@ export class ProgressComponent implements AfterViewInit {
   viewReady = signal(false);
   private initialized = false;
 
-  // Effects declared as fields — valid injection context
+  // Auto-select first exercise when data loads from IndexedDB
   private autoSelectEffect = effect(() => {
     const exercises = this.exercisesUsed();
     if (!this.initialized && exercises.length > 0) {
       this.initialized = true;
       this.selectedExerciseId.set(exercises[0].id);
-      if (this.viewReady()) {
-        this.initProgressChart(exercises[0].id);
-      }
     }
   });
 
+  // (Re)draw progress chart whenever selected exercise or view readiness changes
   private progressEffect = effect(() => {
     const id = this.selectedExerciseId();
     if (this.viewReady() && id) {
-      this.updateProgressChart(id);
+      this.initProgressChart(id);
     }
   });
 
@@ -66,20 +64,12 @@ export class ProgressComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.viewReady.set(true);
     this.initFrequencyChart();
-
-    const exercises = this.exercisesUsed();
-    if (exercises.length > 0 && !this.initialized) {
-      this.initialized = true;
-      this.selectedExerciseId.set(exercises[0].id);
-      this.initProgressChart(exercises[0].id);
-    }
+    this.viewReady.set(true); // triggers progressEffect and frequencyEffect
   }
 
   onExerciseChange(id: string): void {
-    this.selectedExerciseId.set(id);
-    this.initProgressChart(id);
+    this.selectedExerciseId.set(id); // progressEffect handles chart update
   }
 
   private initProgressChart(exerciseId: string): void {
