@@ -2,6 +2,7 @@ export interface WorkoutSet {
   reps: number;
   weight: number; // in kg
   duration?: number; // in seconds (time-based exercises)
+  done?: boolean;
 }
 
 export interface WorkoutExercise {

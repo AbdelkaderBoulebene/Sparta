@@ -106,6 +106,10 @@
         background: var(--sparta-bg);
         border: 1px solid var(--sparta-border);
         flex-shrink: 0;
+        cursor: pointer;
+        transition: opacity 0.15s;
+
+        &:hover { opacity: 0.8; }
       }
 
       .exercise-title {
@@ -133,6 +137,12 @@
           gap: 6px;
           flex-wrap: wrap;
 
+          .target-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+
           .target-label {
             font-size: 0.68rem;
             color: var(--sparta-text-muted);
@@ -140,8 +150,6 @@
             letter-spacing: 0.5px;
             white-space: nowrap;
           }
-
-          .target-sep { color: var(--sparta-text-muted); font-size: 0.8rem; }
 
           .target-input {
             width: 52px;
@@ -171,6 +179,40 @@
       gap: 6px;
       flex-shrink: 0;
 
+      .progress-suggest-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+
+        .suggest-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+          color: var(--sparta-bronze);
+        }
+      }
+
+      .progress-suggest-btn {
+        background: rgba(184, 115, 51, 0.1);
+        border: 1px solid var(--sparta-bronze);
+        border-radius: 2px;
+        color: var(--sparta-bronze);
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: var(--font-body);
+
+        &:hover {
+          background: rgba(184, 115, 51, 0.3);
+        }
+      }
+
       .overload-badge {
         display: flex;
         align-items: center;
@@ -196,7 +238,7 @@
 
     .sets-header {
       display: grid;
-      grid-template-columns: 36px 90px 1fr 1fr auto;
+      grid-template-columns: 36px 90px 1fr 1fr 36px 40px;
       gap: 8px;
       color: var(--sparta-text-dim);
       font-size: 0.7rem;
@@ -208,7 +250,7 @@
 
     .set-row {
       display: grid;
-      grid-template-columns: 36px 90px 1fr 1fr auto;
+      grid-template-columns: 36px 90px 1fr 1fr 36px 40px;
       gap: 8px;
       align-items: center;
       margin-bottom: 8px;
@@ -248,6 +290,37 @@
         &[readonly] { background: rgba(0,0,0,0.15); cursor: default; }
         &.hit-max { border-color: #2ea043; color: #4caf50; }
       }
+
+      .set-validate-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid var(--sparta-border);
+        background: transparent;
+        color: var(--sparta-text-dim);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        padding: 0;
+
+        mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+        &:hover { border-color: #4caf50; color: #4caf50; }
+
+        &.done {
+          background: rgba(76, 175, 80, 0.2);
+          border-color: #4caf50;
+          color: #4caf50;
+        }
+      }
+    }
+
+    .set-row.set-done {
+      opacity: 0.6;
+
+      .set-input { border-color: rgba(76, 175, 80, 0.4); }
     }
   }
 
@@ -281,11 +354,13 @@
 
     .sets-container {
       .sets-header {
-        grid-template-columns: 28px 1fr 1fr auto;
+        grid-template-columns: 28px 1fr 1fr 36px 40px;
+
+        span:nth-child(2) { display: none; }
       }
 
       .set-row {
-        grid-template-columns: 28px 1fr 1fr auto;
+        grid-template-columns: 28px 1fr 1fr 36px 40px;
 
         .set-target { display: none; }
       }
@@ -299,10 +374,50 @@
   .targets-row {
     gap: 4px !important;
 
-    .target-input {
-      width: 44px !important;
+    .target-group {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
 
-      &.target-weight { width: 52px !important; }
+      .target-label { font-size: 0.6rem; }
+
+      .target-input {
+        width: 54px !important;
+        &.target-weight { width: 54px !important; }
+      }
+    }
+  }
+}
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: auto;
+
+  &.zoomed {
+    align-items: flex-start;
+    padding: 24px;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+
+    &.zoomed {
+      max-width: none;
+      max-height: none;
+      width: min(90vw, 800px);
+      cursor: zoom-out;
     }
   }
 }

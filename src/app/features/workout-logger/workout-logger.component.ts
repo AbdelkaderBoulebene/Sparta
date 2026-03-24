@@ -48,6 +48,9 @@ export class WorkoutLoggerComponent implements OnInit {
   isViewMode = false;
   workoutId: number | null = null;
   selectedTemplateId = signal<number | null>(null);
+  lightboxUrl = signal<string | null>(null);
+  lightboxZoomed = signal(false);
+  progressSuggestions = signal<Set<string>>(new Set());
 
   label = signal('');
   date = signal(new Date().toISOString().split('T')[0]);
@@ -120,6 +123,58 @@ export class WorkoutLoggerComponent implements OnInit {
           weight: te.targetWeight,
         })),
       })),
+    );
+    this.computeProgressSuggestions();
+  }
+
+  private computeProgressSuggestions(): void {
+    const all = this.storage.workouts();
+    const ready = new Set<string>();
+    for (const ex of this.exercises()) {
+      const pastWorkout = all.find(w => w.exercises.some(e => e.exerciseId === ex.exerciseId));
+      if (!pastWorkout) continue;
+      const pastEx = pastWorkout.exercises.find(e => e.exerciseId === ex.exerciseId)!;
+      const allHit = pastEx.sets.every(s =>
+        pastEx.isTimeBased
+          ? (s.duration ?? 0) >= (pastEx.maxDuration ?? 0)
+          : s.reps >= pastEx.maxReps,
+      );
+      if (allHit) ready.add(ex.exerciseId);
+    }
+    this.progressSuggestions.set(ready);
+  }
+
+  hasSuggestion(exerciseId: string): boolean {
+    return this.progressSuggestions().has(exerciseId);
+  }
+
+  applySuggestion(exIndex: number, newWeight: number): void {
+    const ex = this.exercises()[exIndex];
+    this.exercises.update(list =>
+      list.map((e, i) =>
+        i !== exIndex ? e : {
+          ...e,
+          targetWeight: newWeight,
+          sets: e.sets.map(s => ({ ...s, weight: newWeight })),
+        },
+      ),
+    );
+    this.progressSuggestions.update(s => {
+      const copy = new Set(s);
+      copy.delete(ex.exerciseId);
+      return copy;
+    });
+  }
+
+  toggleSetDone(exIndex: number, setIndex: number): void {
+    this.exercises.update(list =>
+      list.map((e, i) => {
+        if (i !== exIndex) return e;
+        const sets = e.sets.map((s, si) =>
+          si === setIndex ? { ...s, done: !s.done } : s,
+        );
+        return { ...e, sets };
+      }),
     );
   }
 

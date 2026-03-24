@@ -45,7 +45,8 @@
       <div class="exercise-header">
         <div class="exercise-info">
           @if (ex.exerciseImage) {
-            <img [src]="ex.exerciseImage" [alt]="ex.exerciseName" class="exercise-thumb" />
+            <img [src]="ex.exerciseImage" [alt]="ex.exerciseName" class="exercise-thumb"
+               (click)="lightboxUrl.set(ex.exerciseImage!)" />
           }
           <div class="exercise-title">
             <h3>{{ exDisplayName(ex) }}</h3>
@@ -59,41 +60,51 @@
               </span>
             } @else {
               <div class="targets-row">
-                <span class="target-label">Séries</span>
-                <input type="number" class="target-input"
-                  [value]="ex.targetSets"
-                  (change)="updateExerciseTarget(i, 'targetSets', +$any($event.target).value)"
-                  min="1" max="20" />
+                <div class="target-group">
+                  <span class="target-label">Séries</span>
+                  <input type="number" class="target-input"
+                    [value]="ex.targetSets"
+                    (change)="updateExerciseTarget(i, 'targetSets', +$any($event.target).value)"
+                    min="1" max="20" />
+                </div>
                 @if (ex.isTimeBased) {
-                  <span class="target-label">Min (s)</span>
-                  <input type="number" class="target-input"
-                    [value]="ex.minDuration ?? 20"
-                    (change)="updateExerciseTarget(i, 'minDuration', +$any($event.target).value)"
-                    min="1" max="3600" />
-                  <span class="target-sep">—</span>
-                  <span class="target-label">Max (s)</span>
-                  <input type="number" class="target-input"
-                    [value]="ex.maxDuration ?? 60"
-                    (change)="updateExerciseTarget(i, 'maxDuration', +$any($event.target).value)"
-                    min="1" max="3600" />
+                  <div class="target-group">
+                    <span class="target-label">Min (s)</span>
+                    <input type="number" class="target-input"
+                      [value]="ex.minDuration ?? 20"
+                      (change)="updateExerciseTarget(i, 'minDuration', +$any($event.target).value)"
+                      min="1" max="3600" />
+                  </div>
+                  <div class="target-group">
+                    <span class="target-label">Max (s)</span>
+                    <input type="number" class="target-input"
+                      [value]="ex.maxDuration ?? 60"
+                      (change)="updateExerciseTarget(i, 'maxDuration', +$any($event.target).value)"
+                      min="1" max="3600" />
+                  </div>
                 } @else {
-                  <span class="target-label">Min</span>
-                  <input type="number" class="target-input"
-                    [value]="ex.minReps"
-                    (change)="updateExerciseTarget(i, 'minReps', +$any($event.target).value)"
-                    min="1" max="100" />
-                  <span class="target-sep">—</span>
-                  <span class="target-label">Max reps</span>
-                  <input type="number" class="target-input"
-                    [value]="ex.maxReps"
-                    (change)="updateExerciseTarget(i, 'maxReps', +$any($event.target).value)"
-                    min="1" max="100" />
+                  <div class="target-group">
+                    <span class="target-label">Min reps</span>
+                    <input type="number" class="target-input"
+                      [value]="ex.minReps"
+                      (change)="updateExerciseTarget(i, 'minReps', +$any($event.target).value)"
+                      min="1" max="100" />
+                  </div>
+                  <div class="target-group">
+                    <span class="target-label">Max reps</span>
+                    <input type="number" class="target-input"
+                      [value]="ex.maxReps"
+                      (change)="updateExerciseTarget(i, 'maxReps', +$any($event.target).value)"
+                      min="1" max="100" />
+                  </div>
                 }
-                <span class="target-label">Poids (kg)</span>
-                <input type="number" class="target-input target-weight"
-                  [value]="ex.targetWeight"
-                  (change)="updateExerciseTarget(i, 'targetWeight', +$any($event.target).value)"
-                  min="0" step="2.5" />
+                <div class="target-group">
+                  <span class="target-label">Poids (kg)</span>
+                  <input type="number" class="target-input target-weight"
+                    [value]="ex.targetWeight"
+                    (change)="updateExerciseTarget(i, 'targetWeight', +$any($event.target).value)"
+                    min="0" step="2.5" />
+                </div>
                 <button mat-icon-button class="timer-toggle-btn" (click)="toggleTimeBased(i)"
                   [title]="ex.isTimeBased ? 'Mode reps' : 'Mode durée'">
                   <mat-icon>{{ ex.isTimeBased ? 'timer_off' : 'timer' }}</mat-icon>
@@ -103,6 +114,17 @@
           </div>
         </div>
         <div class="exercise-actions">
+          @if (!isViewMode && hasSuggestion(ex.exerciseId)) {
+            <div class="progress-suggest-group">
+              <mat-icon class="suggest-icon">arrow_upward</mat-icon>
+              @for (delta of [2.5, 5, 10]; track delta) {
+                <button class="progress-suggest-btn"
+                  (click)="applySuggestion(i, ex.targetWeight + delta)">
+                  +{{ delta }}kg
+                </button>
+              }
+            </div>
+          }
           @if (isReadyToProgress(ex)) {
             <span class="overload-badge">
               <mat-icon>trending_up</mat-icon> Augmenter !
@@ -127,11 +149,11 @@
           <span>Objectif</span>
           <span>{{ ex.isTimeBased ? 'Durée (s)' : 'Reps' }}</span>
           <span>Poids (kg)</span>
-          @if (!isViewMode) { <span></span> }
+          @if (!isViewMode) { <span></span><span></span> }
         </div>
 
         @for (set of ex.sets; track $index; let si = $index) {
-          <div class="set-row">
+          <div class="set-row" [class.set-done]="set.done">
             <span class="set-number">{{ si + 1 }}</span>
             <span class="set-target">
               @if (ex.isTimeBased) {
@@ -167,6 +189,9 @@
               class="set-input"
             />
             @if (!isViewMode) {
+              <button class="set-validate-btn" [class.done]="set.done" (click)="toggleSetDone(i, si)">
+                <mat-icon>check</mat-icon>
+              </button>
               <button mat-icon-button (click)="removeSet(i, si)" [disabled]="ex.sets.length === 1">
                 <mat-icon>remove_circle_outline</mat-icon>
               </button>
@@ -201,5 +226,14 @@
   <div class="empty-state">
     <mat-icon>add_circle_outline</mat-icon>
     <p>Sélectionnez un programme ou ajoutez des exercices</p>
+  </div>
+}
+
+@if (lightboxUrl()) {
+  <div class="lightbox-overlay" [class.zoomed]="lightboxZoomed()"
+       (click)="lightboxUrl.set(null); lightboxZoomed.set(false)">
+    <img [src]="lightboxUrl()!" alt="Aperçu exercice" class="lightbox-img"
+         [class.zoomed]="lightboxZoomed()"
+         (click)="lightboxZoomed.set(!lightboxZoomed()); $event.stopPropagation()" />
   </div>
 }
